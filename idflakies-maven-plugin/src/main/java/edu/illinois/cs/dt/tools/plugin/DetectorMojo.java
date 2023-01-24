@@ -38,6 +38,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -307,7 +308,9 @@ public class DetectorMojo extends AbstractIDFlakiesMojo {
             Logger.getGlobal().log(Level.INFO, "Locating tests...");
             try {
 		        locateTestList.put(id, OperationTime.runOperation(() -> {
-                    return new ArrayList<String>(JavaConverters.bufferAsJavaList(TestLocator.tests(project, testFramework).toBuffer()));
+                    ArrayList<String> testsList = new ArrayList<String>(JavaConverters.bufferAsJavaList(TestLocator.tests(project, testFramework).toBuffer()));
+		    Collections.sort(testsList);
+		    return testsList;
                 }, (tests, time) -> {
                     Logger.getGlobal().log(Level.INFO, "Located " + tests.size() + " tests. Time taken: " + time.elapsedSeconds() + " seconds");
                     return tests;
